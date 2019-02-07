@@ -21,3 +21,15 @@ void Sphere::makeGizmo()
 	
 }
 
+bool Sphere::checkCollision(PhysicsObject * pOther)
+{
+	Sphere* other = (Sphere*)pOther;
+	float minCollision = m_radius + other->getRadius();
+	float distance = glm::distance(m_position, other->getPosition());
+
+	if (distance <= minCollision)
+		return true;
+	else
+		return false;
+}
+
