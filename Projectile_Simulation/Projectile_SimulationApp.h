@@ -6,11 +6,12 @@
 #include "Sphere.h"
 #include <glm/ext.hpp>
 
-class Physics_and_FixedTimestepApp : public aie::Application {
+
+class Projectile_SimulationApp : public aie::Application {
 public:
 
-	Physics_and_FixedTimestepApp();
-	virtual ~Physics_and_FixedTimestepApp();
+	Projectile_SimulationApp();
+	virtual ~Projectile_SimulationApp();
 
 	virtual bool startup();
 	virtual void shutdown();
@@ -18,15 +19,14 @@ public:
 	virtual void update(float deltaTime);
 	virtual void draw();
 
+	void setupContinuousDemo(glm::vec2 startPos, float inclination,
+							float speed, float gravity);
+
 protected:
+
 
 	aie::Renderer2D*	m_2dRenderer;
 	aie::Font*			m_font;
 
 	PhysicsScene* m_physicsScene;
-
-	const int TOTAL_BALLS = 10;
-
-	Sphere* m_ball1;
-	//Sphere* m_ball2;
 };

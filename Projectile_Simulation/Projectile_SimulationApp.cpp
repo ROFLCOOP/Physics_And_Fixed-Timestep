@@ -1,18 +1,18 @@
-#include "Physics_and_FixedTimestepApp.h"
+#include "Projectile_SimulationApp.h"
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
 #include <Gizmos.h>
 
-Physics_and_FixedTimestepApp::Physics_and_FixedTimestepApp() {
+Projectile_SimulationApp::Projectile_SimulationApp() {
 
 }
 
-Physics_and_FixedTimestepApp::~Physics_and_FixedTimestepApp() {
+Projectile_SimulationApp::~Projectile_SimulationApp() {
 
 }
 
-bool Physics_and_FixedTimestepApp::startup() {
+bool Projectile_SimulationApp::startup() {
 	
 	aie::Gizmos::create(255U, 255U, 65535U, 65535U);
 
@@ -22,53 +22,37 @@ bool Physics_and_FixedTimestepApp::startup() {
 	// the following path would be used instead: "./font/consolas.ttf"
 	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
 
-	
-
 	m_physicsScene = new PhysicsScene();
 	m_physicsScene->setGravity(glm::vec2(0, 0));
 	m_physicsScene->setTimeStep(0.01f);
 
-	//m_ball1 = new Sphere(glm::vec2(-20, 0), glm::vec2(10, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
-	//m_ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(-10, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
-	//
-	//m_physicsScene->addActor(m_ball1);
-	//m_physicsScene->addActor(m_ball2);
-
-	m_ball1 = new Sphere(glm::vec2(0, -20), glm::vec2(0, 0), 20.0f, 5, glm::vec4(1, 0, 0, 1), 3);
-	
-	m_physicsScene->addActor(m_ball1);
-
 	return true;
 }
 
-void Physics_and_FixedTimestepApp::shutdown() {
+void Projectile_SimulationApp::shutdown() {
 
 	delete m_font;
 	delete m_2dRenderer;
 }
 
-void Physics_and_FixedTimestepApp::update(float deltaTime) {
+void Projectile_SimulationApp::update(float deltaTime) {
 
 	// input example
 	aie::Input* input = aie::Input::getInstance();
-
-	aie::Gizmos::clear();
+	
+	//aie::Gizmos::clear();
 
 	m_physicsScene->update(deltaTime);
 	m_physicsScene->updateGizmos();
 
-	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
-	{
-		m_physicsScene->activateRocket(deltaTime, m_ball1);
-	}
-
+	setupContinuousDemo(glm::vec2(-40, 0), 45.0f, 40.0f, -10.0f);
 
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
 }
 
-void Physics_and_FixedTimestepApp::draw() {
+void Projectile_SimulationApp::draw() {
 
 	// wipe the screen to the background colour
 	clearScreen();
@@ -82,8 +66,34 @@ void Physics_and_FixedTimestepApp::draw() {
 		-100 / aspectRatio, 100 / aspectRatio, -1.0f, 1.0f));
 
 	// output some text, uses the last used colour
-	//m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
+	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
 
 	// done drawing sprites
 	m_2dRenderer->end();
+}
+
+void Projectile_SimulationApp::setupContinuousDemo(glm::vec2 startPos, float inclination, float speed, float gravity)
+{
+	float t = 0;
+	float tStep = 1.0f;
+	float radius = 1.0f;
+	int segments = 12;
+	glm::vec4 colour = glm::vec4(1, 1, 0, 1);
+
+	glm::vec2 direction(cos(inclination), sin(inclination));
+	glm::normalize(direction);
+
+	while (t <= 5)
+	{
+		//calculate the x, y position of the projectile at time t
+		float x = startPos.x;
+		float y = startPos.y;
+
+		x += speed * t * direction.x;
+
+		y += (speed + (gravity * t)) * t * direction.y;
+
+		aie::Gizmos::add2DCircle(glm::vec2(x, y), radius, segments, colour);
+		t += tStep;
+	}
 }
