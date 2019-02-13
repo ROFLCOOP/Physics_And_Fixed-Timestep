@@ -30,6 +30,15 @@
     <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Sphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\AABB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Plane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\PhysicsObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Physics_and_FixedTimestepApp.h">
@@ -45,6 +54,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\AABB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

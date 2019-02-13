@@ -4,8 +4,8 @@
 enum ShapeType
 {
 	PLANE = 0,
-	SPHERE,
-	BOX
+	SPHERE = 1,
+	BOX = 2
 };
 
 class PhysicsObject
@@ -18,6 +18,8 @@ public:
 	virtual void debug() = 0;
 	virtual void makeGizmo() = 0;
 	virtual void resetPosition() {};
+
+	const ShapeType getShapeID();
 
 protected:
 	ShapeType m_shapeID;

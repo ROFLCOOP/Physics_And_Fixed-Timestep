@@ -23,20 +23,36 @@ bool Physics_and_FixedTimestepApp::startup() {
 	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
 
 	
-
 	m_physicsScene = new PhysicsScene();
 	m_physicsScene->setGravity(glm::vec2(0, 0));
 	m_physicsScene->setTimeStep(0.01f);
 
-	//m_ball1 = new Sphere(glm::vec2(-20, 0), glm::vec2(10, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
-	//m_ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(-10, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
-	//
-	//m_physicsScene->addActor(m_ball1);
-	//m_physicsScene->addActor(m_ball2);
-
-	m_ball1 = new Sphere(glm::vec2(0, -20), glm::vec2(0, 0), 20.0f, 5, glm::vec4(1, 0, 0, 1), 3);
+	// create objects here
 	
-	m_physicsScene->addActor(m_ball1);
+	float angle = 0.707f;
+
+	Sphere* ball1 = new Sphere(glm::vec2(-50, 50), glm::vec2(angle * 10, angle * -10), 20, 5, glm::vec4(1, 0, 1, 1), 16);
+	Sphere* ball2 = new Sphere(glm::vec2(50, -50), glm::vec2(angle * -10, angle * 10), 20, 5, glm::vec4(1, 0, 1, 1), 16);
+
+	AABB* box1 = new AABB(glm::vec2(50, 50), glm::vec2(angle * -10, angle * -10), 20, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1));
+	AABB* box2 = new AABB(glm::vec2(-50, -50), glm::vec2(angle * 10, angle * 10), 20, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1));
+
+	Plane* top = new Plane(glm::vec2(0, -1), 55, glm::vec4(1, 1, 1, 1));
+	Plane* bottom = new Plane(glm::vec2(0, 1), 55, glm::vec4(1, 1, 1, 1));
+	Plane* left = new Plane(glm::vec2(1, 0), 99, glm::vec4(1, 1, 1, 1));
+	Plane* right = new Plane(glm::vec2(-1, 0), 99, glm::vec4(1, 1, 1, 1));
+	
+
+	//add physics objects here
+	m_physicsScene->addActor(ball1);
+	m_physicsScene->addActor(ball2);
+	m_physicsScene->addActor(box1);
+	m_physicsScene->addActor(box2);
+
+	m_physicsScene->addActor(top);
+	m_physicsScene->addActor(bottom);
+	m_physicsScene->addActor(left);
+	m_physicsScene->addActor(right);
 
 	return true;
 }
@@ -61,6 +77,8 @@ void Physics_and_FixedTimestepApp::update(float deltaTime) {
 	{
 		m_physicsScene->activateRocket(deltaTime, m_ball1);
 	}
+
+	m_physicsScene->checkForCollision();
 
 
 	// exit the application

@@ -4,6 +4,8 @@
 #include "Renderer2D.h"
 #include "PhysicsScene.h"
 #include "Sphere.h"
+#include "AABB.h"
+#include "Plane.h"
 #include <glm/ext.hpp>
 
 class Physics_and_FixedTimestepApp : public aie::Application {

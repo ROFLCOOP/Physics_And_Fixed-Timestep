@@ -162,15 +162,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\AABB.cpp" />
+    <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\PhysicsObject.cpp" />
     <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\PhysicsScene.cpp" />
+    <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Plane.cpp" />
     <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\RigidBody.cpp" />
     <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Sphere.cpp" />
     <ClCompile Include="Physics_and_FixedTimestepApp.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\AABB.h" />
     <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\PhysicsObject.h" />
     <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\PhysicsScene.h" />
+    <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Plane.h" />
     <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\RigidBody.h" />
     <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Sphere.h" />
     <ClInclude Include="Physics_and_FixedTimestepApp.h" />
