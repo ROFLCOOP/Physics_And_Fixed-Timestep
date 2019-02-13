@@ -31,8 +31,11 @@ bool Physics_and_FixedTimestepApp::startup() {
 	
 	float angle = 0.707f;
 
-	Sphere* ball1 = new Sphere(glm::vec2(-50, 50), glm::vec2(angle * 10, angle * -10), 20, 5, glm::vec4(1, 0, 1, 1), 16);
-	Sphere* ball2 = new Sphere(glm::vec2(50, -50), glm::vec2(angle * -10, angle * 10), 20, 5, glm::vec4(1, 0, 1, 1), 16);
+	//Sphere* ball1 = new Sphere(glm::vec2(-50, 50), glm::vec2(angle * 50, angle * -50), 20, 5, glm::vec4(1, 0, 1, 1), 16);
+	//Sphere* ball2 = new Sphere(glm::vec2(50, -50), glm::vec2(angle * -30, angle * 30), 20, 5, glm::vec4(1, 0, 1, 1), 16);
+
+	Sphere* ball1 = new Sphere(glm::vec2(-20, 0), glm::vec2(11.11f, 0), 0.170f, 5, glm::vec4(1, 0, 1, 1), 16);
+	Sphere* ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(0, 0), 0.160f, 5, glm::vec4(1, 0, 1, 1), 16);
 
 	AABB* box1 = new AABB(glm::vec2(50, 50), glm::vec2(angle * -10, angle * -10), 20, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1));
 	AABB* box2 = new AABB(glm::vec2(-50, -50), glm::vec2(angle * 10, angle * 10), 20, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1));
@@ -46,8 +49,8 @@ bool Physics_and_FixedTimestepApp::startup() {
 	//add physics objects here
 	m_physicsScene->addActor(ball1);
 	m_physicsScene->addActor(ball2);
-	m_physicsScene->addActor(box1);
-	m_physicsScene->addActor(box2);
+	//m_physicsScene->addActor(box1);
+	//m_physicsScene->addActor(box2);
 
 	m_physicsScene->addActor(top);
 	m_physicsScene->addActor(bottom);

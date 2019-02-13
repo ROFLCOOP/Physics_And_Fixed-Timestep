@@ -233,7 +233,7 @@ bool PhysicsScene::sphere2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 		float intersection = sphere->getRadius() - sphereToPlane;
 		if (intersection > 0)
 		{
-			std::cout << "sphere2Plane Collision" << std::endl;
+			//std::cout << "sphere2Plane Collision" << std::endl;
 			return true;
 		}
 	}
@@ -258,6 +258,20 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 		if (distance < minCollision)
 		{
 			std::cout << "sphere2Sphere Collision" << std::endl;
+			float posScalar = ((minCollision - distance) * 0.5f) + 10; // minCollision - distance should give the amount of overlap between the circles, this is halved in order to apply one half to each circle
+			glm::vec2 direction = sphere1->getPosition() - sphere2->getPosition();
+
+			direction = glm::normalize(direction);
+
+			glm::vec2 newPos1 = sphere1->getPosition() + (direction * -posScalar);
+			glm::vec2 newPos2 = sphere2->getPosition() + (direction * posScalar);
+
+			float newDistance = glm::distance(newPos1, newPos2);
+
+			sphere1->setPosition(newPos1);
+			sphere2->setPosition(newPos2);
+
+			sphere1->resolveCollision(sphere2);
 			return true;
 		}
 	}

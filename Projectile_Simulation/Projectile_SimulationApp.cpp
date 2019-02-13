@@ -75,7 +75,7 @@ void Projectile_SimulationApp::draw() {
 void Projectile_SimulationApp::setupContinuousDemo(glm::vec2 startPos, float inclination, float speed, float gravity)
 {
 	float t = 0;
-	float tStep = 1.0f;
+	float tStep = 0.5f;
 	float radius = 1.0f;
 	int segments = 12;
 	glm::vec4 colour = glm::vec4(1, 1, 0, 1);
