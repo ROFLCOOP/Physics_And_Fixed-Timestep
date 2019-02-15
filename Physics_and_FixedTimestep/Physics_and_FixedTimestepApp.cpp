@@ -13,7 +13,9 @@ Physics_and_FixedTimestepApp::~Physics_and_FixedTimestepApp() {
 }
 
 bool Physics_and_FixedTimestepApp::startup() {
-	
+	srand(time(NULL));
+
+
 	aie::Gizmos::create(255U, 255U, 65535U, 65535U);
 
 	m_2dRenderer = new aie::Renderer2D();
@@ -24,38 +26,55 @@ bool Physics_and_FixedTimestepApp::startup() {
 
 	
 	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setGravity(glm::vec2(0, 0));
-	m_physicsScene->setTimeStep(0.01f);
+	m_physicsScene->setGravity(glm::vec2(0, -100));
+	m_physicsScene->setTimeStep(0.001f);
 
 	// create objects here
 	
 	float angle = 0.707f;
+	const int ballCount = 20;
 
-	//Sphere* ball1 = new Sphere(glm::vec2(-50, 50), glm::vec2(angle * 50, angle * -50), 20, 5, glm::vec4(1, 0, 1, 1), 16);
-	//Sphere* ball2 = new Sphere(glm::vec2(50, -50), glm::vec2(angle * -30, angle * 30), 20, 5, glm::vec4(1, 0, 1, 1), 16);
+	Sphere* Buallz[ballCount];
 
-	Sphere* ball1 = new Sphere(glm::vec2(-20, 0), glm::vec2(11.11f, 0), 0.170f, 5, glm::vec4(1, 0, 1, 1), 16);
-	Sphere* ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(0, 0), 0.160f, 5, glm::vec4(1, 0, 1, 1), 16);
+	for (int i = 0; i < ballCount; i++)
+	{
+		Buallz[i] = new Sphere(glm::vec2((rand() % 180) - 90, (rand() % 140) - 70), glm::vec2((rand() % 500) - 250, (rand() % 500) - 250), (rand() % 100) + 1 , 5, glm::vec4((rand() % 100) * 0.05f, (rand() % 100) * 0.05f, (rand() % 100) * 0.05f, 1), 32, 0.3f, 0.3f, 0.8f);
+	}
 
-	AABB* box1 = new AABB(glm::vec2(50, 50), glm::vec2(angle * -10, angle * -10), 20, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1));
-	AABB* box2 = new AABB(glm::vec2(-50, -50), glm::vec2(angle * 10, angle * 10), 20, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1));
 
-	Plane* top = new Plane(glm::vec2(0, -1), 55, glm::vec4(1, 1, 1, 1));
-	Plane* bottom = new Plane(glm::vec2(0, 1), 55, glm::vec4(1, 1, 1, 1));
-	Plane* left = new Plane(glm::vec2(1, 0), 99, glm::vec4(1, 1, 1, 1));
-	Plane* right = new Plane(glm::vec2(-1, 0), 99, glm::vec4(1, 1, 1, 1));
 	
+	Sphere* ball1 = new Sphere(glm::vec2(-20, 0), glm::vec2(100, 0), 0.170f, 5, glm::vec4(1, 0, 1, 1), 16, 0.3f, 0.3f, 0.8f);
+	Sphere* ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(-50, 0), 50000, 5, glm::vec4(1, 0, 1, 0.5f), 16, 0.3f, 0.3f, 0.8f);
+
+	AABB* box1 = new AABB(glm::vec2(50, 40), glm::vec2(-50, 0), 20, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1), 0.3f, 0.3f, 0.8f);
+	AABB* box2 = new AABB(glm::vec2(-50, 40), glm::vec2(50, 0), 20, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1), 0.3f, 0.3f, 0.8f);
+
+	Plane* top = new Plane(glm::vec2(0, 1), -55, glm::vec4(1, 1, 1, 1));
+	Plane* bottom = new Plane(glm::vec2(0, -1), -55, glm::vec4(1, 1, 1, 1));
+	Plane* left = new Plane(glm::vec2(-1, 0), -99, glm::vec4(1, 1, 1, 1));
+	Plane* right = new Plane(glm::vec2(1, 0), -99, glm::vec4(1, 1, 1, 1));
+
+	glm::vec2 diagAngle = glm::normalize(glm::vec2(55, 100));
+
+	Plane* diag = new Plane(diagAngle, -20, glm::vec4(1, 1, 1, 1));
 
 	//add physics objects here
-	m_physicsScene->addActor(ball1);
-	m_physicsScene->addActor(ball2);
-	//m_physicsScene->addActor(box1);
-	//m_physicsScene->addActor(box2);
+
+	for (int i = 0; i < ballCount; i++)
+	{
+		m_physicsScene->addActor(Buallz[i]);
+	}
+
+	//m_physicsScene->addActor(ball1);
+	//m_physicsScene->addActor(ball2);
+	m_physicsScene->addActor(box1);
+	m_physicsScene->addActor(box2);
 
 	m_physicsScene->addActor(top);
 	m_physicsScene->addActor(bottom);
 	m_physicsScene->addActor(left);
 	m_physicsScene->addActor(right);
+	//m_physicsScene->addActor(diag);
 
 	return true;
 }
@@ -78,7 +97,7 @@ void Physics_and_FixedTimestepApp::update(float deltaTime) {
 
 	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
 	{
-		m_physicsScene->activateRocket(deltaTime, m_ball1);
+		//m_physicsScene->activateRocket(deltaTime, m_ball1);
 	}
 
 	m_physicsScene->checkForCollision();

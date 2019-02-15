@@ -3,7 +3,7 @@
 
 
 AABB::AABB(glm::vec2 position, glm::vec2 velocity, float mass,
-	glm::vec2 max, glm::vec4 colour) : RigidBody(BOX, position, velocity, 0, mass), m_minPos(-max), m_maxPos(max), m_colour(colour)
+	glm::vec2 max, glm::vec4 colour, float linearDrag, float angularDrag, float elasticity) : RigidBody(BOX, position, velocity, 0, mass, linearDrag, angularDrag, elasticity), m_minPos(-max), m_maxPos(max), m_colour(colour)
 {
 }
 

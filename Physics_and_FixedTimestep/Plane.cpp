@@ -32,7 +32,7 @@ Plane::~Plane()
 void Plane::makeGizmo()
 {
 	float lineSegmentLength = 300.0f;
-	glm::vec2 centerPoint = m_normal * -m_distanceToOrigin;
+	glm::vec2 centerPoint = m_normal * m_distanceToOrigin;
 
 	glm::vec2 parallel(m_normal.y, -m_normal.x);
 	glm::vec2 start = centerPoint + (parallel * lineSegmentLength);
@@ -44,4 +44,16 @@ void Plane::makeGizmo()
 bool Plane::checkCollision(PhysicsObject * other)
 {
 	return false;
+}
+
+void Plane::resolveCollision(RigidBody * other, glm::vec2 collisionNorm)
+{
+	float elasticity = other->getElasticity();
+	glm::vec2 velocity = other->getVelocity();
+
+	float j = glm::dot(-(1 + elasticity) * velocity, collisionNorm) / (1 / other->getMass());
+
+	glm::vec2 force = collisionNorm * j;
+
+	other->applyForce(force);
 }

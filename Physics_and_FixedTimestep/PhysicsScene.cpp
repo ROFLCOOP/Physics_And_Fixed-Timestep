@@ -110,7 +110,7 @@ void PhysicsScene::activateRocket(float dt, Sphere* rocket)
 
 			fuelPos -= glm::vec2(0, rocket->getRadius());
 
-			Sphere* fuelBall = new Sphere(fuelPos, glm::vec2(0, 0), 0.1f, 1, glm::vec4(0, 1, 0, 1), 16);
+			Sphere* fuelBall = new Sphere(fuelPos, glm::vec2(0, 0), 0.1f, 1, glm::vec4(0, 1, 0, 1), 16, 0.3f, 0.3f, 0.8f);
 			addActor(fuelBall);
 			rocket->applyForceToActor(fuelBall, glm::vec2(0, -5));
 		}
@@ -166,16 +166,23 @@ bool PhysicsScene::plane2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 			sphere->getPosition(),
 			plane->getNormal()) - plane->getDistance();
 
-		if (sphereToPlane < 0)
+		/*if (sphereToPlane < 0)
 		{
 			collisionNormal *= -1;
 			sphereToPlane *= -1;
-		}
+		}*/
 
 		float intersection = sphere->getRadius() - sphereToPlane;
 		if (intersection > 0)
 		{
-			std::cout << "plane2Sphere Collision" << std::endl;
+			//std::cout << "plane2Sphere Collision" << std::endl;
+
+			//glm::vec2 direction(glm::normalize(sphere->getPosition() - ))
+
+			sphere->setPosition(sphere->getPosition() + (collisionNormal * intersection));
+
+			plane->resolveCollision(sphere, collisionNormal);
+
 			return true;
 		}
 	}
@@ -190,21 +197,39 @@ bool PhysicsScene::plane2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 
 	if (plane != nullptr && box != nullptr)
 	{
-		glm::vec2 bottomLeft = box->getMinPos();
-		glm::vec2 topRight = box->getMaxPos();
-		glm::vec2 bottomRight = glm::vec2(box->getMaxPos().x, box->getMinPos().y);
-		glm::vec2 topLeft = glm::vec2(box->getMinPos().x, box->getMaxPos().y);
+		glm::vec2 planeNorm = plane->getNormal();
+		glm::vec2 vec1, vec2;
+		if (planeNorm.x >= 0)
+		{
+			vec1.x = box->getMinPos().x;
+			vec2.x = box->getMaxPos().x;
+		}
+		else
+		{
+			vec1.x = box->getMaxPos().x;
+			vec2.x = box->getMinPos().x;
+		}
 
-		float bottomLeftDis = glm::dot(bottomLeft, plane->getNormal()) - plane->getDistance();
-		float topRightDis = glm::dot(topRight, plane->getNormal()) - plane->getDistance();
-		float bottomRightDis = glm::dot(bottomRight, plane->getNormal()) - plane->getDistance();
-		float topLeftDis = glm::dot(topLeft, plane->getNormal()) - plane->getDistance();
+		if (planeNorm.y >= 0)
+		{
+			vec1.y = box->getMinPos().y;
+			vec2.y = box->getMaxPos().y;
+		}
+		else
+		{
+			vec1.y = box->getMaxPos().y;
+			vec2.y = box->getMinPos().y;
+		}
 
-		//the following results get inverted with the intention of using && instead of ||
-		if (bottomLeftDis > 0 || topRightDis > 0
-			|| bottomRightDis > 0 || topLeftDis > 0)
+		float posSide = (planeNorm.x * vec2.x) + (planeNorm.y * vec2.y) + plane->getDistance();
+		//float negSide = (planeNorm.x * vec1.x) + (planeNorm.y * vec1.y) + plane->getDistance();
+
+		if (posSide > 0)
 		{
 			std::cout << "plane2Box Collision" << std::endl;
+
+
+
 			return true;
 		}
 	}
@@ -214,31 +239,37 @@ bool PhysicsScene::plane2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 
 bool PhysicsScene::sphere2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 {
-	Sphere *sphere = dynamic_cast<Sphere*>(obj1);
-	Plane  *plane = dynamic_cast<Plane*>(obj2);
+	return plane2Sphere(obj2, obj1);
 
-	if (sphere != nullptr && plane != nullptr)
-	{
-		glm::vec2 collisionNormal = plane->getNormal();
-		float sphereToPlane = glm::dot(
-			sphere->getPosition(),
-			plane->getNormal()) - plane->getDistance();
-
-		if (sphereToPlane < 0) 
-		{
-			collisionNormal *= -1;
-			sphereToPlane *= -1;
-		}
-
-		float intersection = sphere->getRadius() - sphereToPlane;
-		if (intersection > 0)
-		{
-			//std::cout << "sphere2Plane Collision" << std::endl;
-			return true;
-		}
-	}
-
-	return false;
+	//Sphere *sphere = dynamic_cast<Sphere*>(obj1);
+	//Plane  *plane = dynamic_cast<Plane*>(obj2);
+	//
+	//if (sphere != nullptr && plane != nullptr)
+	//{
+	//	glm::vec2 collisionNormal = plane->getNormal();
+	//	float sphereToPlane = glm::dot(sphere->getPosition(),
+	//		plane->getNormal()) - plane->getDistance();
+	//
+	//	if (sphereToPlane < 0) 
+	//	{
+	//		collisionNormal *= -1;
+	//		sphereToPlane *= -1;
+	//	}
+	//
+	//	float intersection = sphere->getRadius() - sphereToPlane;
+	//	if (intersection > 0)
+	//	{
+	//		//std::cout << "sphere2Plane Collision" << std::endl;
+	//
+	//		sphere->setPosition(sphere->getPosition() + (collisionNormal * intersection));
+	//
+	//		plane->resolveCollision(sphere, collisionNormal);
+	//
+	//		return true;
+	//	}
+	//}
+	//
+	//return false;
 }
 
 bool PhysicsScene::sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
@@ -257,21 +288,37 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 		//compare the distance and the minimum collision distance
 		if (distance < minCollision)
 		{
-			std::cout << "sphere2Sphere Collision" << std::endl;
-			float posScalar = ((minCollision - distance) * 0.5f) + 10; // minCollision - distance should give the amount of overlap between the circles, this is halved in order to apply one half to each circle
+			//std::cout << "sphere2Sphere Collision" << std::endl;
+
+			//float scalar1 = glm::distance(glm::vec2(0, 0), sphere1->getVelocity());
+			//float scalar2 = glm::distance(glm::vec2(0, 0), sphere2->getVelocity());
+			//
+			//float percentageConv = scalar1 + scalar2;
+			//
+			//percentageConv = (100 / percentageConv);
+			//
+			//scalar1 *= percentageConv;
+			//scalar1 *= 0.01f;
+			//scalar2 *= percentageConv;
+			//scalar2 *= 0.01f;
+			//
+			float res1 = sphere1->getMass() / (sphere1->getMass() + sphere2->getMass());
+			float res2 = sphere2->getMass() / (sphere1->getMass() + sphere2->getMass());
+
+			float posScalar = (minCollision - distance); // minCollision - distance should give the amount of overlap between the circles, this is halved in order to apply one half to each circle
 			glm::vec2 direction = sphere1->getPosition() - sphere2->getPosition();
 
 			direction = glm::normalize(direction);
 
-			glm::vec2 newPos1 = sphere1->getPosition() + (direction * -posScalar);
-			glm::vec2 newPos2 = sphere2->getPosition() + (direction * posScalar);
+			glm::vec2 newPos1 = sphere1->getPosition() + (direction * (posScalar * res1));
+			glm::vec2 newPos2 = sphere2->getPosition() + (direction * (-posScalar * res2));
 
 			float newDistance = glm::distance(newPos1, newPos2);
 
 			sphere1->setPosition(newPos1);
 			sphere2->setPosition(newPos2);
 
-			sphere1->resolveCollision(sphere2);
+			sphere1->resolveCollision(sphere2, direction);
 			return true;
 		}
 	}
@@ -291,7 +338,7 @@ bool PhysicsScene::sphere2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 
 		if (distance < sphere->getRadius())
 		{
-			std::cout << "sphere2Box Collision" << std::endl;
+			//std::cout << "sphere2Box Collision" << std::endl;
 			return true;
 		}
 
@@ -307,21 +354,39 @@ bool PhysicsScene::box2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 
 	if (box != nullptr && plane != nullptr)
 	{
-		glm::vec2 bottomLeft = box->getMinPos();
-		glm::vec2 topRight = box->getMaxPos();
-		glm::vec2 bottomRight = glm::vec2(box->getMaxPos().x, box->getMinPos().y);
-		glm::vec2 topLeft = glm::vec2(box->getMinPos().x, box->getMaxPos().y);
-
-		float bottomLeftDis = glm::dot(bottomLeft, plane->getNormal()) - plane->getDistance();
-		float topRightDis = glm::dot(topRight, plane->getNormal()) - plane->getDistance();
-		float bottomRightDis = glm::dot(bottomRight, plane->getNormal()) - plane->getDistance();
-		float topLeftDis = glm::dot(topLeft, plane->getNormal()) - plane->getDistance();
-
-		//the following results get inverted with the intention of using && instead of ||
-		if (bottomLeftDis > 0 || topRightDis > 0
-			|| bottomRightDis > 0 || topLeftDis > 0)
+		glm::vec2 planeNorm = plane->getNormal();
+		glm::vec2 vec1, vec2;
+		if (planeNorm.x >= 0)
 		{
-			std::cout << "plane2Box Collision" << std::endl;
+			vec1.x = box->getMinPos().x;
+			vec2.x = box->getMaxPos().x;
+		}
+		else
+		{
+			vec1.x = box->getMaxPos().x;
+			vec2.x = box->getMinPos().x;
+		}
+		
+		if (planeNorm.y >= 0)
+		{
+			vec1.y = box->getMinPos().y;
+			vec2.y = box->getMaxPos().y;
+		}
+		else
+		{
+			vec1.y = box->getMaxPos().y;
+			vec2.y = box->getMinPos().y;
+		}
+		
+		float posSide = (planeNorm.x * vec2.x) + (planeNorm.y * vec2.y) + plane->getDistance();
+		//float negSide = (planeNorm.x * vec1.x) + (planeNorm.y * vec1.y) + plane->getDistance();
+
+		if (posSide > 0)
+		{
+			std::cout << "box2Plane Collision" << std::endl;
+
+
+
 			return true;
 		}
 	}
@@ -341,7 +406,13 @@ bool PhysicsScene::box2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 
 		if (distance < sphere->getRadius())
 		{
-			std::cout << "sphere2Box Collision" << std::endl;
+			//std::cout << "sphere2Box Collision" << std::endl;
+
+
+
+
+			//box->resolveCollision(sphere, );
+
 			return true;
 		}
 
@@ -362,7 +433,37 @@ bool PhysicsScene::box2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 			&& box1->getMinPos().y < box2->getMaxPos().y
 			&& box1->getMaxPos().y > box2->getMinPos().y)
 		{
-			std::cout << "box2Box Collision" << std::endl;
+			//std::cout << "box2Box Collision" << std::endl;
+
+			const glm::vec2 faces[4] =
+			{
+				glm::vec2(-1, 0), glm::vec2(1, 0),
+				glm::vec2(0, -1), glm::vec2(0, 1)
+			};
+
+			float distance[4] =
+			{
+				(box2->getMaxPos().x - box1->getMinPos().x),
+				(box1->getMaxPos().x - box2->getMinPos().x),
+				(box2->getMaxPos().y - box1->getMinPos().y),
+				(box1->getMaxPos().y - box2->getMinPos().y),
+			};
+
+			float min = INFINITY;
+			int faceCol = 0;
+			for (int i = 0; i < 4; i++)
+			{
+				if (distance[i] < min)
+				{
+					min = distance[i];
+					faceCol = i;
+				}
+			}
+
+			box1->setPosition(box1->getPosition() + (faces[faceCol] * -min));
+
+			box1->resolveCollision(box2, faces[faceCol]);
+
 			return true;
 		}
 	}

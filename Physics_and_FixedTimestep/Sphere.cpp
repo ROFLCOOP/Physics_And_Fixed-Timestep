@@ -3,8 +3,8 @@
 
 
 Sphere::Sphere(glm::vec2 position, glm::vec2 velocity,
-	float mass, float radius, glm::vec4 colour, int sides) :
-	RigidBody(SPHERE, position, velocity, 0, mass)
+	float mass, float radius, glm::vec4 colour, int sides, float linearDrag, float angularDrag, float elasticity) :
+	RigidBody(SPHERE, position, velocity, 0, mass, linearDrag, angularDrag, elasticity)
 {
 	m_radius = radius;
 	m_colour = colour;
