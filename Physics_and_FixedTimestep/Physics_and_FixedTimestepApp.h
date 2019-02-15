@@ -27,7 +27,7 @@ protected:
 
 	PhysicsScene* m_physicsScene;
 
-	float m_timer = 0;
+	//float m_timer = 0;
 
 	const int TOTAL_BALLS = 10;
 

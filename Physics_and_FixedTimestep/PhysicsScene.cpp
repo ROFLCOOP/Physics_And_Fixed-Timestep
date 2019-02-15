@@ -192,49 +192,52 @@ bool PhysicsScene::plane2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 
 bool PhysicsScene::plane2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 {
-	Plane *plane = dynamic_cast<Plane*>(obj1);
-	AABB  *box = dynamic_cast<AABB*>(obj2);
 
-	if (plane != nullptr && box != nullptr)
-	{
-		glm::vec2 planeNorm = plane->getNormal();
-		glm::vec2 vec1, vec2;
-		if (planeNorm.x >= 0)
-		{
-			vec1.x = box->getMinPos().x;
-			vec2.x = box->getMaxPos().x;
-		}
-		else
-		{
-			vec1.x = box->getMaxPos().x;
-			vec2.x = box->getMinPos().x;
-		}
+	return box2Plane(obj2, obj1);
 
-		if (planeNorm.y >= 0)
-		{
-			vec1.y = box->getMinPos().y;
-			vec2.y = box->getMaxPos().y;
-		}
-		else
-		{
-			vec1.y = box->getMaxPos().y;
-			vec2.y = box->getMinPos().y;
-		}
-
-		float posSide = (planeNorm.x * vec2.x) + (planeNorm.y * vec2.y) + plane->getDistance();
-		//float negSide = (planeNorm.x * vec1.x) + (planeNorm.y * vec1.y) + plane->getDistance();
-
-		if (posSide > 0)
-		{
-			std::cout << "plane2Box Collision" << std::endl;
-
-
-
-			return true;
-		}
-	}
-
-	return false;
+	//Plane *plane = dynamic_cast<Plane*>(obj1);
+	//AABB  *box = dynamic_cast<AABB*>(obj2);
+	//
+	//if (plane != nullptr && box != nullptr)
+	//{
+	//	glm::vec2 planeNorm = plane->getNormal();
+	//	glm::vec2 vec1, vec2;
+	//	if (planeNorm.x >= 0)
+	//	{
+	//		vec1.x = box->getMinPos().x;
+	//		vec2.x = box->getMaxPos().x;
+	//	}
+	//	else
+	//	{
+	//		vec1.x = box->getMaxPos().x;
+	//		vec2.x = box->getMinPos().x;
+	//	}
+	//
+	//	if (planeNorm.y >= 0)
+	//	{
+	//		vec1.y = box->getMinPos().y;
+	//		vec2.y = box->getMaxPos().y;
+	//	}
+	//	else
+	//	{
+	//		vec1.y = box->getMaxPos().y;
+	//		vec2.y = box->getMinPos().y;
+	//	}
+	//
+	//	float posSide = (planeNorm.x * vec2.x) + (planeNorm.y * vec2.y) + plane->getDistance();
+	//	//float negSide = (planeNorm.x * vec1.x) + (planeNorm.y * vec1.y) + plane->getDistance();
+	//
+	//	if (posSide > 0)
+	//	{
+	//		std::cout << "plane2Box Collision" << std::endl;
+	//
+	//
+	//
+	//		return true;
+	//	}
+	//}
+	//
+	//return false;
 }
 
 bool PhysicsScene::sphere2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
@@ -288,20 +291,6 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 		//compare the distance and the minimum collision distance
 		if (distance < minCollision)
 		{
-			//std::cout << "sphere2Sphere Collision" << std::endl;
-
-			//float scalar1 = glm::distance(glm::vec2(0, 0), sphere1->getVelocity());
-			//float scalar2 = glm::distance(glm::vec2(0, 0), sphere2->getVelocity());
-			//
-			//float percentageConv = scalar1 + scalar2;
-			//
-			//percentageConv = (100 / percentageConv);
-			//
-			//scalar1 *= percentageConv;
-			//scalar1 *= 0.01f;
-			//scalar2 *= percentageConv;
-			//scalar2 *= 0.01f;
-			//
 			float res1 = sphere1->getMass() / (sphere1->getMass() + sphere2->getMass());
 			float res2 = sphere2->getMass() / (sphere1->getMass() + sphere2->getMass());
 
@@ -328,23 +317,24 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 
 bool PhysicsScene::sphere2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 {
-	Sphere *sphere = dynamic_cast<Sphere*>(obj1);
-	AABB *box = dynamic_cast<AABB*>(obj2);
-
-	if (sphere != nullptr && box != nullptr)
-	{
-		glm::vec2 clampPoint = glm::clamp(sphere->getPosition(), box->getMinPos(), box->getMaxPos());
-		float distance = glm::distance(sphere->getPosition(), clampPoint);
-
-		if (distance < sphere->getRadius())
-		{
-			//std::cout << "sphere2Box Collision" << std::endl;
-			return true;
-		}
-
-	}
-
-	return false;
+	return box2Sphere(obj2, obj1);
+	//Sphere *sphere = dynamic_cast<Sphere*>(obj1);
+	//AABB *box = dynamic_cast<AABB*>(obj2);
+	//
+	//if (sphere != nullptr && box != nullptr)
+	//{
+	//	glm::vec2 clampPoint = glm::clamp(sphere->getPosition(), box->getMinPos(), box->getMaxPos());
+	//	float distance = glm::distance(sphere->getPosition(), clampPoint);
+	//
+	//	if (distance < sphere->getRadius())
+	//	{
+	//		//std::cout << "sphere2Box Collision" << std::endl;
+	//		return true;
+	//	}
+	//
+	//}
+	//
+	//return false;
 }
 
 bool PhysicsScene::box2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
@@ -354,7 +344,7 @@ bool PhysicsScene::box2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 
 	if (box != nullptr && plane != nullptr)
 	{
-		glm::vec2 planeNorm = plane->getNormal();
+		glm::vec2 planeNorm = -plane->getNormal();
 		glm::vec2 vec1, vec2;
 		if (planeNorm.x >= 0)
 		{
@@ -385,7 +375,11 @@ bool PhysicsScene::box2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 		{
 			std::cout << "box2Plane Collision" << std::endl;
 
+			//glm::vec2 colNorm(-planeNorm.y, planeNorm.x);
 
+			box->setPosition(box->getPosition() + (planeNorm * -posSide));
+
+			plane->resolveCollision(box, planeNorm);
 
 			return true;
 		}
@@ -407,11 +401,19 @@ bool PhysicsScene::box2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 		if (distance < sphere->getRadius())
 		{
 			//std::cout << "sphere2Box Collision" << std::endl;
+			float boxRes = box->getMass() / (box->getMass() + sphere->getMass());
+			float sphereRes = sphere->getMass() / (box->getMass() + sphere->getMass());
 
+			float overlap = sphere->getRadius() - distance;
 
+			glm::vec2 colNorm = glm::normalize(clampPoint);
 
+			box->setPosition(box->getPosition() + (-overlap * colNorm) * boxRes);
+			sphere->setPosition(sphere->getPosition() + (overlap * colNorm) * sphereRes);
 
-			//box->resolveCollision(sphere, );
+			float boxDot = glm::dot(glm::vec2(0, 1), clampPoint);
+
+			box->resolveCollision(sphere, colNorm);
 
 			return true;
 		}
