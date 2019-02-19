@@ -406,12 +406,10 @@ bool PhysicsScene::box2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 
 			float overlap = sphere->getRadius() - distance;
 
-			glm::vec2 colNorm = glm::normalize(clampPoint);
+			glm::vec2 colNorm = glm::normalize(sphere->getPosition() - clampPoint);
 
 			box->setPosition(box->getPosition() + (-overlap * colNorm) * boxRes);
 			sphere->setPosition(sphere->getPosition() + (overlap * colNorm) * sphereRes);
-
-			float boxDot = glm::dot(glm::vec2(0, 1), clampPoint);
 
 			box->resolveCollision(sphere, colNorm);
 
