@@ -68,11 +68,12 @@ bool Physics_and_FixedTimestepApp::startup() {
 	verts.push_back(glm::vec2(8, -6));
 	verts.push_back(glm::vec2(-8, -4));
 
-	SAT* testSAT = new SAT(glm::vec2(0, 0), glm::vec2(0, 0), verts, 0, 5, 0, 0, 1, glm::vec4(1,1,1,1));
+	SAT* sat1 = new SAT(glm::vec2(0, 0), glm::vec2(0, 0), -4, 40, 0, 5, 0, 0, 1, glm::vec4(1,1,1,1));
+	SAT* sat2 = new SAT(glm::vec2(20, 0), glm::vec2(-10, 0), 6, 10, 0, 5, 0, 0, 1, glm::vec4(1, 1, 1, 1));
 
 	//add physics objects here
-	m_physicsScene->addActor(testSAT);
-
+	m_physicsScene->addActor(sat1);
+	//m_physicsScene->addActor(sat2);
 
 	//for (int i = 0; i < ballCount; i++)
 	//{
@@ -88,7 +89,7 @@ bool Physics_and_FixedTimestepApp::startup() {
 	m_physicsScene->addActor(bottom);
 	m_physicsScene->addActor(left);
 	m_physicsScene->addActor(right);
-	m_physicsScene->addActor(diag);
+	//m_physicsScene->addActor(diag);
 	//m_physicsScene->addActor(midSplit);
 
 

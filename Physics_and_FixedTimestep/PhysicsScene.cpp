@@ -521,6 +521,19 @@ bool PhysicsScene::sat2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 
 bool PhysicsScene::sat2Sat(PhysicsObject * obj1, PhysicsObject * obj2)
 {
+	SAT* sat1 = dynamic_cast<SAT*>(obj1);
+	SAT* sat2 = dynamic_cast<SAT*>(obj2);
+	if (sat1 != nullptr && sat2 != nullptr)
+	{
+		std::vector<glm::vec2> axes;
+		//std::vector<glm::vec2> edges1 = sat1->getEdges();
+		
+		for (auto vec : sat1->getEdges())
+		{
+			glm::vec2 perp(vec.y, -vec.x);
+			axes.push_back(glm::normalize(perp));
+		}
+	}
 	return false;
 }
 
