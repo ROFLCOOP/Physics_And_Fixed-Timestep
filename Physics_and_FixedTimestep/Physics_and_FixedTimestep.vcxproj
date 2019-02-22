@@ -167,6 +167,7 @@
     <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\PhysicsScene.cpp" />
     <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Plane.cpp" />
     <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\RigidBody.cpp" />
+    <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\SAT.cpp" />
     <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Sphere.cpp" />
     <ClCompile Include="Physics_and_FixedTimestepApp.cpp" />
     <ClCompile Include="main.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\PhysicsScene.h" />
     <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Plane.h" />
     <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\RigidBody.h" />
+    <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\SAT.h" />
     <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Sphere.h" />
     <ClInclude Include="Physics_and_FixedTimestepApp.h" />
   </ItemGroup>

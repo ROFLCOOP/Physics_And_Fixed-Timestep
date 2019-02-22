@@ -39,6 +39,9 @@
     <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\PhysicsObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\%40%40Repository\Physics_and_FixedTimestep\SAT.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Physics_and_FixedTimestepApp.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\Plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\%40%40Repository\Physics_and_FixedTimestep\SAT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

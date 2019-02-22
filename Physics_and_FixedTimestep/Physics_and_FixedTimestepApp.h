@@ -6,7 +6,9 @@
 #include "Sphere.h"
 #include "AABB.h"
 #include "Plane.h"
+#include "SAT.h"
 #include <glm/ext.hpp>
+#include <vector>
 
 class Physics_and_FixedTimestepApp : public aie::Application {
 public:

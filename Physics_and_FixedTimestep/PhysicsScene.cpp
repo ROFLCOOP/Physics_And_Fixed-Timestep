@@ -6,9 +6,10 @@ typedef bool(*fn)(PhysicsObject*, PhysicsObject*);
 
 static fn collisionFunctionArray[] =
 {
-	PhysicsScene::plane2Plane,	PhysicsScene::plane2Sphere,		PhysicsScene::plane2Box,
-	PhysicsScene::sphere2Plane,	PhysicsScene::sphere2Sphere,	PhysicsScene::sphere2Box,	
-	PhysicsScene::box2Plane,	PhysicsScene::box2Sphere,		PhysicsScene::box2Box
+	PhysicsScene::plane2Plane,	PhysicsScene::plane2Sphere,		PhysicsScene::plane2Box,	PhysicsScene::plane2Sat,
+	PhysicsScene::sphere2Plane,	PhysicsScene::sphere2Sphere,	PhysicsScene::sphere2Box,	PhysicsScene::sphere2Sat,
+	PhysicsScene::box2Plane,	PhysicsScene::box2Sphere,		PhysicsScene::box2Box,		PhysicsScene::box2Sat,
+	PhysicsScene::sat2Plane,	PhysicsScene::sat2Sphere,		PhysicsScene::sat2Box,		PhysicsScene::sat2Sat
 };
 
 
@@ -240,6 +241,11 @@ bool PhysicsScene::plane2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 	//return false;
 }
 
+bool PhysicsScene::plane2Sat(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
 bool PhysicsScene::sphere2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 {
 	return plane2Sphere(obj2, obj1);
@@ -337,6 +343,11 @@ bool PhysicsScene::sphere2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 	//return false;
 }
 
+bool PhysicsScene::sphere2Sat(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
 bool PhysicsScene::box2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 {
 	AABB *box = dynamic_cast<AABB*>(obj1);
@@ -406,7 +417,24 @@ bool PhysicsScene::box2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 
 			float overlap = sphere->getRadius() - distance;
 
-			glm::vec2 colNorm = glm::normalize(sphere->getPosition() - clampPoint);
+			glm::vec2 colNorm;
+
+			if (sphere->getPosition() == clampPoint)
+			{
+				std::cout << "colNorm Error" << std::endl; // the sphere position is on the clamp point, the colnorm will not work
+				if (sphere->getVelocity() != glm::vec2(0, 0))
+					colNorm = -glm::normalize(sphere->getVelocity());
+				else
+					colNorm = -glm::normalize(box->getVelocity());
+			}
+			else
+				colNorm = glm::normalize(sphere->getPosition() - clampPoint);
+
+
+
+
+			if (glm::dot(sphere->getPosition() - clampPoint, sphere->getPosition() - box->getPosition()) <= 0)
+				colNorm = -colNorm;
 
 			box->setPosition(box->getPosition() + (-overlap * colNorm) * boxRes);
 			sphere->setPosition(sphere->getPosition() + (overlap * colNorm) * sphereRes);
@@ -468,6 +496,31 @@ bool PhysicsScene::box2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 		}
 	}
 
+	return false;
+}
+
+bool PhysicsScene::box2Sat(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool PhysicsScene::sat2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool PhysicsScene::sat2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool PhysicsScene::sat2Box(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool PhysicsScene::sat2Sat(PhysicsObject * obj1, PhysicsObject * obj2)
+{
 	return false;
 }
 

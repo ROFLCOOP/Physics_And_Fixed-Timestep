@@ -26,13 +26,13 @@ bool Physics_and_FixedTimestepApp::startup() {
 
 	
 	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setGravity(glm::vec2(0, -10));
-	m_physicsScene->setTimeStep(0.001f);
+	m_physicsScene->setGravity(glm::vec2(0, 0));
+	m_physicsScene->setTimeStep(0.0001f);
 
 	// create objects here
 	
 	float angle = 0.707f;
-	const int ballCount = 5;
+	const int ballCount = 20;
 
 	Sphere* Buallz[ballCount];
 
@@ -47,7 +47,7 @@ bool Physics_and_FixedTimestepApp::startup() {
 	Sphere* ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(-50, 0), 1, 5, glm::vec4(1, 0, 1, 0.5f), 16, 0.3f, 0.3f, 0.8f);
 
 	AABB* box1 = new AABB(glm::vec2(50, 0), glm::vec2(-50, 0), 50, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1), 0.3f, 0.3f, 0.8f);
-	AABB* box2 = new AABB(glm::vec2(-50, 0), glm::vec2(50, 0), 1, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1), 0.3f, 0.3f, 0.8f);
+	AABB* box2 = new AABB(glm::vec2(-50, 0), glm::vec2(50, 0), 50, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1), 0.3f, 0.3f, 0.8f);
 
 	Plane* top = new Plane(glm::vec2(0, 1), -55, glm::vec4(1, 1, 1, 1));
 	Plane* bottom = new Plane(glm::vec2(0, -1), -55, glm::vec4(1, 1, 1, 1));
@@ -60,23 +60,35 @@ bool Physics_and_FixedTimestepApp::startup() {
 
 	Plane* midSplit = new Plane(glm::vec2(1, 0), 0, glm::vec4(1, 1, 1, 1));
 
+	std::vector<glm::vec2> verts;
+	verts.push_back(glm::vec2(-10, 10));
+	verts.push_back(glm::vec2(0, 15));
+	verts.push_back(glm::vec2(8, 13));
+	verts.push_back(glm::vec2(12, 5));
+	verts.push_back(glm::vec2(8, -6));
+	verts.push_back(glm::vec2(-8, -4));
+
+	SAT* testSAT = new SAT(glm::vec2(0, 0), glm::vec2(0, 0), verts, 0, 5, 0, 0, 1, glm::vec4(1,1,1,1));
+
 	//add physics objects here
+	m_physicsScene->addActor(testSAT);
 
-	for (int i = 0; i < ballCount; i++)
-	{
-		m_physicsScene->addActor(Buallz[i]);
-	}
 
-	m_physicsScene->addActor(ball1);
-	m_physicsScene->addActor(ball2);
-	m_physicsScene->addActor(box1);
-	m_physicsScene->addActor(box2);
+	//for (int i = 0; i < ballCount; i++)
+	//{
+	//	m_physicsScene->addActor(Buallz[i]);
+	//}
+	//
+	//m_physicsScene->addActor(ball1);
+	//m_physicsScene->addActor(ball2);
+	//m_physicsScene->addActor(box1);
+	//m_physicsScene->addActor(box2);
 
 	m_physicsScene->addActor(top);
 	m_physicsScene->addActor(bottom);
 	m_physicsScene->addActor(left);
 	m_physicsScene->addActor(right);
-	//m_physicsScene->addActor(diag);
+	m_physicsScene->addActor(diag);
 	//m_physicsScene->addActor(midSplit);
 
 

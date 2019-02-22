@@ -36,13 +36,19 @@ public:
 	static bool plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2) { return false; }
 	static bool plane2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool plane2Box(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool plane2Sat(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool sphere2Box(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool sphere2Sat(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool box2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool box2Box(PhysicsObject* obj1, PhysicsObject* obj2);
-
+	static bool box2Sat(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool sat2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool sat2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool sat2Box(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool sat2Sat(PhysicsObject* obj1, PhysicsObject* obj2);
 
 protected:
 	glm::vec2 m_gravity;
@@ -50,6 +56,6 @@ protected:
 
 	std::vector<PhysicsObject*> m_actors;
 
-	const int SHAPE_COUNT = 3;
+	const int SHAPE_COUNT = 4;
 };
 

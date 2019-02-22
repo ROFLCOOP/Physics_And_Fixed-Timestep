@@ -9,8 +9,6 @@ public:
 
 	void makeGizmo();
 
-	bool checkCollision(PhysicsObject* other);
-
 	const glm::vec2 getMinPos() const { return m_position + m_minPos; }
 	const glm::vec2 getMaxPos() const { return m_position + m_maxPos; }
 

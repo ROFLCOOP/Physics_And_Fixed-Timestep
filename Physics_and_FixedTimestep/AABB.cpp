@@ -15,8 +15,3 @@ void AABB::makeGizmo()
 {
 	aie::Gizmos::add2DAABBFilled(m_position, m_maxPos, m_colour);
 }
-
-bool AABB::checkCollision(PhysicsObject * other)
-{
-	return false;
-}
