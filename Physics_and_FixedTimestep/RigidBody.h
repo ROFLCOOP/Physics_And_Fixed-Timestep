@@ -9,6 +9,10 @@ class RigidBody : public PhysicsObject
 public:
 	RigidBody(ShapeType shapeID, glm::vec2 position,
 			glm::vec2 velocity, float rotation, float mass, float linearDrag, float angularDrag, float elasticity);
+	
+	RigidBody(ShapeType shapeID, glm::vec2 position, float angularVelocity,
+		glm::vec2 velocity, float rotation, float mass, float linearDrag, float angularDrag, float elasticity);
+	
 	~RigidBody();
 
 	virtual void fixedUpdate(glm::vec2 gravity, float timeStep);
@@ -36,6 +40,7 @@ public:
 protected:
 	glm::vec2 m_position;
 	glm::vec2 m_velocity;
+	float m_angularVelocity = 0;
 	float m_mass;
 	float m_rotation;
 	float m_elasticity = 1;

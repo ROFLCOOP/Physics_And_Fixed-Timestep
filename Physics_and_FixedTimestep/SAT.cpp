@@ -11,6 +11,7 @@ SAT::SAT(glm::vec2 position, glm::vec2 velocity, unsigned int sides, float radiu
 	{
 		rotateAngle(dir, -(angle));
 		m_verts.push_back(dir * radius);
+
 	}
 
 	m_colour = colour;
@@ -66,6 +67,21 @@ std::vector<glm::vec2> SAT::getEdges() const
 	return edges;
 }
 
+glm::vec2 SAT::project(glm::vec2 axis)
+{
+	float min = glm::dot(axis, getVerts()[0]);
+	float max = min;
+	for (int i = 1; i < getVerts().size(); i++)
+	{
+		float vert = glm::dot(axis, getVerts()[i]);
+		if (vert < min)
+			min = vert;
+		else if (vert > max)
+			max = vert;
+	}
+	return glm::vec2(min, max);
+}
+
 void SAT::rotateAngle(glm::vec2 & vec, float radians)
 {
 	if (radians == 0)
@@ -78,6 +94,7 @@ void SAT::rotateAngle(glm::vec2 & vec, float radians)
 
 	vec.x = x * cs - y * sn;
 	vec.y = x * sn + y * cs;
+	
 	vec = glm::normalize(vec);
 }
 

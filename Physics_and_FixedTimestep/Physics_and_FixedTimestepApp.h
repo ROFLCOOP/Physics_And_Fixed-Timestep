@@ -9,6 +9,7 @@
 #include "SAT.h"
 #include <glm/ext.hpp>
 #include <vector>
+#include "input.h"
 
 class Physics_and_FixedTimestepApp : public aie::Application {
 public:
@@ -22,6 +23,8 @@ public:
 	virtual void update(float deltaTime);
 	virtual void draw();
 
+	glm::vec2 getMousePos(aie::Input* input);
+
 protected:
 
 	aie::Renderer2D*	m_2dRenderer;
@@ -33,6 +36,7 @@ protected:
 
 	const int TOTAL_BALLS = 10;
 
+	bool m_mouseWasPressed = false;
 	Sphere* m_ball1;
 	//Sphere* m_ball2;
 };

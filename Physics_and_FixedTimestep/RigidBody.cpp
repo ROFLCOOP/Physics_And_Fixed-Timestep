@@ -4,6 +4,10 @@ RigidBody::RigidBody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, 
 {
 }
 
+RigidBody::RigidBody(ShapeType shapeID, glm::vec2 position, float angularVelocity, glm::vec2 velocity, float rotation, float mass, float linearDrag, float angularDrag, float elasticity) : PhysicsObject(shapeID), m_position(position), m_velocity(velocity), m_rotation(rotation), m_mass(mass), m_linearDrag(linearDrag), m_angularDrag(angularDrag), m_elasticity(elasticity), m_angularVelocity(angularVelocity)
+{
+}
+
 RigidBody::~RigidBody()
 {
 }

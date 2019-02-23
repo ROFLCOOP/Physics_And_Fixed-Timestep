@@ -43,8 +43,8 @@ bool Physics_and_FixedTimestepApp::startup() {
 
 
 	
-	Sphere* ball1 = new Sphere(glm::vec2(-20, 0), glm::vec2(100, 0), 1, 5, glm::vec4(1, 0, 1, 1), 16, 0.3f, 0.3f, 0.8f);
-	Sphere* ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(-50, 0), 1, 5, glm::vec4(1, 0, 1, 0.5f), 16, 0.3f, 0.3f, 0.8f);
+	//Sphere* ball1 = new Sphere(glm::vec2(-20, 0), glm::vec2(100, 0), 1, 5, glm::vec4(1, 0, 1, 1), 16, 0.3f, 0.3f, 0.8f);
+	//Sphere* ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(-50, 0), 1, 5, glm::vec4(1, 0, 1, 0.5f), 16, 0.3f, 0.3f, 0.8f);
 
 	AABB* box1 = new AABB(glm::vec2(50, 0), glm::vec2(-50, 0), 50, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1), 0.3f, 0.3f, 0.8f);
 	AABB* box2 = new AABB(glm::vec2(-50, 0), glm::vec2(50, 0), 50, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1), 0.3f, 0.3f, 0.8f);
@@ -56,24 +56,24 @@ bool Physics_and_FixedTimestepApp::startup() {
 
 	glm::vec2 diagAngle = glm::normalize(glm::vec2(55, 100));
 
-	Plane* diag = new Plane(diagAngle, -20, glm::vec4(1, 1, 1, 1));
+	Plane* diag = new Plane(diagAngle, -50, glm::vec4(1, 1, 1, 1));
 
-	Plane* midSplit = new Plane(glm::vec2(1, 0), 0, glm::vec4(1, 1, 1, 1));
+	//Plane* midSplit = new Plane(glm::vec2(1, 0), 0, glm::vec4(1, 1, 1, 1));
 
-	std::vector<glm::vec2> verts;
-	verts.push_back(glm::vec2(-10, 10));
-	verts.push_back(glm::vec2(0, 15));
-	verts.push_back(glm::vec2(8, 13));
-	verts.push_back(glm::vec2(12, 5));
-	verts.push_back(glm::vec2(8, -6));
-	verts.push_back(glm::vec2(-8, -4));
+	//std::vector<glm::vec2> verts;
+	//verts.push_back(glm::vec2(-10, 10));
+	//verts.push_back(glm::vec2(0, 15));
+	//verts.push_back(glm::vec2(8, 13));
+	//verts.push_back(glm::vec2(12, 5));
+	//verts.push_back(glm::vec2(8, -6));
+	//verts.push_back(glm::vec2(-8, -4));
 
-	SAT* sat1 = new SAT(glm::vec2(0, 0), glm::vec2(0, 0), -4, 40, 0, 5, 0, 0, 1, glm::vec4(1,1,1,1));
-	SAT* sat2 = new SAT(glm::vec2(20, 0), glm::vec2(-10, 0), 6, 10, 0, 5, 0, 0, 1, glm::vec4(1, 1, 1, 1));
+	SAT* sat1 = new SAT(glm::vec2(-20, 0), glm::vec2(10, 0), 3, 10, 0, 5, 0, 0, 1, glm::vec4(1,1,1,1));
+	SAT* sat2 = new SAT(glm::vec2(20, 0), glm::vec2(-10, 0), 5, 10, 0, 5, 0, 0, 1, glm::vec4(1, 1, 1, 1));
 
 	//add physics objects here
 	m_physicsScene->addActor(sat1);
-	//m_physicsScene->addActor(sat2);
+	m_physicsScene->addActor(sat2);
 
 	//for (int i = 0; i < ballCount; i++)
 	//{
@@ -89,7 +89,7 @@ bool Physics_and_FixedTimestepApp::startup() {
 	m_physicsScene->addActor(bottom);
 	m_physicsScene->addActor(left);
 	m_physicsScene->addActor(right);
-	//m_physicsScene->addActor(diag);
+	m_physicsScene->addActor(diag);
 	//m_physicsScene->addActor(midSplit);
 
 
@@ -109,15 +109,24 @@ void Physics_and_FixedTimestepApp::update(float deltaTime) {
 
 	aie::Gizmos::clear();
 
+	if (input->wasMouseButtonPressed(0))
+	{
+		m_physicsScene->attachShapeToMouse(getMousePos(input));
+	}
+	else if (input->isMouseButtonDown(0))
+	{
+		m_physicsScene->dragObject(getMousePos(input));
+	}
+	else if (input->wasMouseButtonReleased(0))
+	{
+		m_physicsScene->detachObject();
+	}
+
 	m_physicsScene->update(deltaTime);
 	m_physicsScene->updateGizmos();
 
-	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
-	{
-		//m_physicsScene->activateRocket(deltaTime, m_ball1);
-	}
-
 	m_physicsScene->checkForCollision();
+
 
 
 	// exit the application
@@ -143,4 +152,14 @@ void Physics_and_FixedTimestepApp::draw() {
 
 	// done drawing sprites
 	m_2dRenderer->end();
+}
+
+glm::vec2 Physics_and_FixedTimestepApp::getMousePos(aie::Input* input)
+{
+	glm::vec2 mousePos(input->getMouseX(), input->getMouseY());
+	float percX = 200.0f / getWindowWidth();
+	mousePos.x = (mousePos.x * percX) - 100;
+	float percY = 110.0f / getWindowHeight();
+	mousePos.y = (mousePos.y * percY) - 55;
+	return mousePos;
 }

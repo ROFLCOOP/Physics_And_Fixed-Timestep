@@ -34,6 +34,10 @@ public:
 
 	void debugScene();
 
+	void attachShapeToMouse(glm::vec2 mousePos);
+	void dragObject(glm::vec2 mousePos);
+	void detachObject();
+
 	static bool plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2) { return false; }
 	static bool plane2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool plane2Box(PhysicsObject* obj1, PhysicsObject* obj2);
@@ -54,6 +58,8 @@ public:
 protected:
 	glm::vec2 m_gravity;
 	float m_timeStep;
+
+	PhysicsObject* m_attachedObject = nullptr;
 
 	std::vector<PhysicsObject*> m_actors;
 

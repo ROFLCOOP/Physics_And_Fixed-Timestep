@@ -27,6 +27,9 @@ public:
 
 	std::vector<glm::vec2> getEdges() const;
 
+	//return a vector 2 of the "min" and "max" verts projected on an axis, where x is min, and y is max
+	glm::vec2 project(glm::vec2 axis);
+
 private:
 	std::vector<glm::vec2> m_verts;
 	glm::vec4 m_colour = glm::vec4 (1.0f, 1.0f, 1.0f, 0.0f);

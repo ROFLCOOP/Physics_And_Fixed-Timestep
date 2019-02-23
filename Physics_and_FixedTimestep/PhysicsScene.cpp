@@ -1,6 +1,7 @@
 #include "PhysicsScene.h"
 #include <list>
 #include <iostream>
+#include <Gizmos.h>
 
 typedef bool(*fn)(PhysicsObject*, PhysicsObject*);
 
@@ -153,6 +154,49 @@ void PhysicsScene::debugScene()
 		pActor->debug();
 		count++;
 	}
+}
+
+void PhysicsScene::attachShapeToMouse(glm::vec2 mousePos)
+{
+	for (PhysicsObject* actor : m_actors)
+	{
+		if (actor->getShapeID() == SPHERE)
+		{
+			Sphere* sphere = dynamic_cast<Sphere*>(actor);
+			assert(sphere != nullptr);
+			if (glm::distance(mousePos, sphere->getPosition()) < sphere->getRadius())
+			{
+				m_attachedObject = sphere;
+			}
+		}
+		else if (actor->getShapeID() == BOX)
+		{
+			AABB* box = dynamic_cast<AABB*>(actor);
+			assert(box != nullptr);
+			if (mousePos.x < box->getMaxPos().x && mousePos.y < box->getMaxPos().y
+				&& mousePos.x > box->getMinPos().x && mousePos.y > box->getMinPos().y)
+			{
+				m_attachedObject = box;
+			}
+		}
+	}
+}
+
+void PhysicsScene::dragObject(glm::vec2 mousePos)
+{
+	if (m_attachedObject != nullptr)
+	{
+		RigidBody* object = dynamic_cast<RigidBody*>(m_attachedObject);
+		assert(object != nullptr);
+		aie::Gizmos::add2DLine(object->getPosition(), mousePos, glm::vec4(1, 1, 1, 1));
+
+		object->applyForce((mousePos - object->getPosition()) * object->getMass());
+	}
+}
+
+void PhysicsScene::detachObject()
+{
+	m_attachedObject = nullptr;
 }
 
 bool PhysicsScene::plane2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
@@ -384,7 +428,7 @@ bool PhysicsScene::box2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 
 		if (posSide > 0)
 		{
-			std::cout << "box2Plane Collision" << std::endl;
+			//std::cout << "box2Plane Collision" << std::endl;
 
 			//glm::vec2 colNorm(-planeNorm.y, planeNorm.x);
 
@@ -421,7 +465,7 @@ bool PhysicsScene::box2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 
 			if (sphere->getPosition() == clampPoint)
 			{
-				std::cout << "colNorm Error" << std::endl; // the sphere position is on the clamp point, the colnorm will not work
+				//std::cout << "colNorm Error" << std::endl; // the sphere position is on the clamp point, the colnorm will not work
 				if (sphere->getVelocity() != glm::vec2(0, 0))
 					colNorm = -glm::normalize(sphere->getVelocity());
 				else
@@ -525,14 +569,91 @@ bool PhysicsScene::sat2Sat(PhysicsObject * obj1, PhysicsObject * obj2)
 	SAT* sat2 = dynamic_cast<SAT*>(obj2);
 	if (sat1 != nullptr && sat2 != nullptr)
 	{
-		std::vector<glm::vec2> axes;
+		float overlap = INFINITY;
+		glm::vec2 smallest;
+		std::vector<glm::vec2> axes1;
+		std::vector<glm::vec2> axes2;
 		//std::vector<glm::vec2> edges1 = sat1->getEdges();
 		
 		for (auto vec : sat1->getEdges())
 		{
 			glm::vec2 perp(vec.y, -vec.x);
-			axes.push_back(glm::normalize(perp));
+			axes1.push_back(glm::normalize(perp));
 		}
+		for (auto vec : sat2->getEdges())
+		{
+			glm::vec2 perp(vec.y, -vec.x);
+			axes2.push_back(glm::normalize(perp));
+		}
+
+		for (int i = 0; i < axes1.size(); i++)
+		{
+			glm::vec2 axis = axes1[i];
+
+			glm::vec2 p1 = sat1->project(axis);
+			glm::vec2 p2 = sat2->project(axis);
+
+			if (p1.x < p2.y && p2.x > p1.y)
+			{
+				return false;
+			}
+			else
+			{
+				float o;
+				if (p1.y - p2.x < p2.y - p1.x)
+					o = p1.y - p2.x;
+				else
+					o = p2.y - p1.x;
+
+				if (o < overlap)
+				{
+					overlap = o;
+					smallest = axis;
+				}
+			}
+		}
+
+		for (int i = 0; i < axes2.size(); i++)
+		{
+			glm::vec2 axis = axes2[i];
+
+			glm::vec2 p1 = sat1->project(axis);
+			glm::vec2 p2 = sat2->project(axis);
+
+			if (p1.x < p2.y && p2.x > p1.y)
+			{
+				return false;
+			}
+			else
+			{
+				float o;
+				if (p1.y - p2.x < p2.y - p1.x)
+					o = p1.y - p2.x;
+				else
+					o = p2.y - p1.x;
+
+				if (o < overlap)
+				{
+					overlap = o;
+					smallest = axis;
+				}
+			}
+		}
+		std::cout << "sat2Sat collision" << std::endl;
+
+		float res1 = sat1->getMass() / (sat1->getMass() + sat2->getMass());
+		float res2 = sat2->getMass() / (sat1->getMass() + sat2->getMass());
+
+
+		glm::vec2 newPos1 = sat1->getPosition() + (smallest * (-overlap * res1));
+		glm::vec2 newPos2 = sat2->getPosition() + (smallest * (overlap * res2));
+
+		sat1->setPosition(newPos1);
+		sat2->setPosition(newPos2);
+
+		sat1->resolveCollision(sat2, -smallest);
+
+		return true;
 	}
 	return false;
 }
