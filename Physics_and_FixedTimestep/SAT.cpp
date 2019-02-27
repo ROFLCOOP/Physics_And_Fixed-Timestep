@@ -5,8 +5,8 @@
 SAT::SAT(glm::vec2 position, glm::vec2 velocity, unsigned int sides, float radius, float rotation, float mass, float linearDrag, float angularDrag, float elasticity, glm::vec4 colour):
 	RigidBody(POLYGON, position, velocity, rotation, mass, linearDrag, angularDrag, elasticity)
 {
-	float angle = (PI*2) / sides;
-	glm::vec2 dir(0, 1);
+	float angle = ((PI * 2) / sides);
+	glm::vec2 dir(sin(rotation), cos(rotation));
 	for (int i = 0; i < sides; i++)
 	{
 		rotateAngle(dir, -(angle));

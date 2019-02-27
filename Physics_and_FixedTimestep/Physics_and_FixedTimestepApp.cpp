@@ -43,10 +43,12 @@ bool Physics_and_FixedTimestepApp::startup() {
 
 
 	
-	//Sphere* ball1 = new Sphere(glm::vec2(-20, 0), glm::vec2(100, 0), 1, 5, glm::vec4(1, 0, 1, 1), 16, 0.3f, 0.3f, 0.8f);
-	//Sphere* ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(-50, 0), 1, 5, glm::vec4(1, 0, 1, 0.5f), 16, 0.3f, 0.3f, 0.8f);
+	Sphere* ball1 = new Sphere(glm::vec2(20, 0), glm::vec2(0, 0), 50, 5, glm::vec4(1, 0, 1, 1), 16, 0.3f, 0.3f, 0.8f);
+	//ball1->setKinematic(true);
+	Sphere* ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(-50, 0), 1, 5, glm::vec4(1, 0, 1, 0.5f), 16, 0.3f, 0.3f, 0.8f);
 
-	AABB* box1 = new AABB(glm::vec2(50, 0), glm::vec2(-50, 0), 50, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1), 0.3f, 0.3f, 0.8f);
+	AABB* box1 = new AABB(glm::vec2(50, 0), glm::vec2(-10, 0), 50, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1), 0.3f, 0.3f, 0.8f);
+	//box1->setKinematic(true);
 	AABB* box2 = new AABB(glm::vec2(-50, 0), glm::vec2(50, 0), 50, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1), 0.3f, 0.3f, 0.8f);
 
 	Plane* top = new Plane(glm::vec2(0, 1), -55, glm::vec4(1, 1, 1, 1));
@@ -68,8 +70,8 @@ bool Physics_and_FixedTimestepApp::startup() {
 	//verts.push_back(glm::vec2(8, -6));
 	//verts.push_back(glm::vec2(-8, -4));
 
-	SAT* sat1 = new SAT(glm::vec2(-20, 0), glm::vec2(10, 0), 3, 10, 0, 5, 0, 0, 1, glm::vec4(1,1,1,1));
-	SAT* sat2 = new SAT(glm::vec2(20, 0), glm::vec2(-10, 0), 5, 10, 0, 5, 0, 0, 1, glm::vec4(1, 1, 1, 1));
+	SAT* sat1 = new SAT(glm::vec2(-20, 0), glm::vec2(10, 0), 3, 10, 90, 50, 0, 0, 1, glm::vec4(1,1,1,1));
+	SAT* sat2 = new SAT(glm::vec2(20, 0), glm::vec2(-10, 0), 4, 10, 0, 5, 0, 0, 1, glm::vec4(1, 1, 1, 1));
 
 	//add physics objects here
 	m_physicsScene->addActor(sat1);
@@ -79,7 +81,7 @@ bool Physics_and_FixedTimestepApp::startup() {
 	//{
 	//	m_physicsScene->addActor(Buallz[i]);
 	//}
-	//
+	
 	//m_physicsScene->addActor(ball1);
 	//m_physicsScene->addActor(ball2);
 	//m_physicsScene->addActor(box1);

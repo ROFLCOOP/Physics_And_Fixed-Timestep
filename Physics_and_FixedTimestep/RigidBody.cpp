@@ -14,6 +14,8 @@ RigidBody::~RigidBody()
 
 void RigidBody::fixedUpdate(glm::vec2 gravity, float timeStep)
 {
+	if (m_isKinematic) return;
+
 	m_velocity -= m_velocity * m_linearDrag * timeStep;
 	m_rotation -= m_rotation * m_angularDrag * timeStep;
 

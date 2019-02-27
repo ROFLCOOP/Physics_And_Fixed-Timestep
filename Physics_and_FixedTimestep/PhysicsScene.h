@@ -60,6 +60,7 @@ protected:
 	float m_timeStep;
 
 	PhysicsObject* m_attachedObject = nullptr;
+	bool m_attachedIsKinematic = false;
 
 	std::vector<PhysicsObject*> m_actors;
 
