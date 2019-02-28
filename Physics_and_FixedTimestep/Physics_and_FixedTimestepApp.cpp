@@ -26,26 +26,26 @@ bool Physics_and_FixedTimestepApp::startup() {
 
 	
 	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setGravity(glm::vec2(0, 0));
+	m_physicsScene->setGravity(glm::vec2(0, -100));
 	m_physicsScene->setTimeStep(0.0001f);
 
 	// create objects here
 	
 	float angle = 0.707f;
-	const int ballCount = 20;
+	const int ballCount = 10;
 
 	Sphere* Buallz[ballCount];
 
 	for (int i = 0; i < ballCount; i++)
 	{
-		Buallz[i] = new Sphere(glm::vec2((rand() % 180) - 90, (rand() % 140) - 70), glm::vec2((rand() % 500) - 250, (rand() % 500) - 250), (rand() % 100) + 1 , 5, glm::vec4((rand() % 100) * 0.05f, (rand() % 100) * 0.05f, (rand() % 100) * 0.05f, 1), 32, 0.3f, 0.3f, 0.8f);
+		Buallz[i] = new Sphere(glm::vec2((rand() % 180) - 90, (rand() % 140) - 70), glm::vec2((rand() % 500) - 250, (rand() % 500) - 250), 50, 5, glm::vec4((rand() % 100) * 0.05f, (rand() % 100) * 0.05f, (rand() % 100) * 0.05f, 1), 32, 0.3f, 0.3f, 0.8f);
 	}
 
 
 	
 	Sphere* ball1 = new Sphere(glm::vec2(20, 0), glm::vec2(0, 0), 50, 5, glm::vec4(1, 0, 1, 1), 16, 0.3f, 0.3f, 0.8f);
-	//ball1->setKinematic(true);
-	Sphere* ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(-50, 0), 1, 5, glm::vec4(1, 0, 1, 0.5f), 16, 0.3f, 0.3f, 0.8f);
+	ball1->setKinematic(true);
+	Sphere* ball2 = new Sphere(glm::vec2(20, 0), glm::vec2(-50, 0), 50, 5, glm::vec4(1, 0, 1, 0.5f), 16, 0.3f, 0.3f, 0.8f);
 
 	AABB* box1 = new AABB(glm::vec2(50, 0), glm::vec2(-10, 0), 50, glm::vec2(5, 5), glm::vec4(1, 1, 0, 1), 0.3f, 0.3f, 0.8f);
 	//box1->setKinematic(true);
@@ -70,20 +70,21 @@ bool Physics_and_FixedTimestepApp::startup() {
 	//verts.push_back(glm::vec2(8, -6));
 	//verts.push_back(glm::vec2(-8, -4));
 
-	SAT* sat1 = new SAT(glm::vec2(-20, 0), glm::vec2(10, 0), 3, 10, 90, 50, 0, 0, 1, glm::vec4(1,1,1,1));
-	SAT* sat2 = new SAT(glm::vec2(20, 0), glm::vec2(-10, 0), 4, 10, 0, 5, 0, 0, 1, glm::vec4(1, 1, 1, 1));
+	SAT* sat1 = new SAT(glm::vec2(-20, 0), glm::vec2(10, 0), 3, 10, 0, 50, 0, 0, 0.8f, glm::vec4(1,1,1,1));
+	SAT* sat2 = new SAT(glm::vec2(20, 0), glm::vec2(-10, 0), 4, 10, 45, 50, 0, 0, 0.8f, glm::vec4(1, 1, 1, 1));
 
 	//add physics objects here
 	m_physicsScene->addActor(sat1);
-	m_physicsScene->addActor(sat2);
+	//m_physicsScene->addActor(sat2);
 
 	//for (int i = 0; i < ballCount; i++)
 	//{
 	//	m_physicsScene->addActor(Buallz[i]);
 	//}
-	
-	//m_physicsScene->addActor(ball1);
+	//
+	m_physicsScene->addActor(ball1);
 	//m_physicsScene->addActor(ball2);
+
 	//m_physicsScene->addActor(box1);
 	//m_physicsScene->addActor(box2);
 

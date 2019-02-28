@@ -168,7 +168,6 @@ void PhysicsScene::attachShapeToMouse(glm::vec2 mousePos)
 			{
 				m_attachedObject = sphere;
 				m_attachedIsKinematic = sphere->isKinematic();
-				sphere->setKinematic(false);
 			}
 		}
 		else if (actor->getShapeID() == BOX)
@@ -180,7 +179,6 @@ void PhysicsScene::attachShapeToMouse(glm::vec2 mousePos)
 			{
 				m_attachedObject = box;
 				m_attachedIsKinematic = box->isKinematic();
-				box->setKinematic(false);
 			}
 		}
 	}
@@ -192,9 +190,16 @@ void PhysicsScene::dragObject(glm::vec2 mousePos)
 	{
 		RigidBody* object = dynamic_cast<RigidBody*>(m_attachedObject);
 		assert(object != nullptr);
-		aie::Gizmos::add2DLine(object->getPosition(), mousePos, glm::vec4(1, 1, 1, 1));
 
-		object->applyForce((mousePos - object->getPosition()) * object->getMass());
+		if (!m_attachedIsKinematic)
+		{
+			aie::Gizmos::add2DLine(object->getPosition(), mousePos, glm::vec4(1, 1, 1, 1));
+			object->applyForce((mousePos - object->getPosition()) * object->getMass());
+		}
+		else
+		{
+			object->setPosition(mousePos);
+		}
 	}
 }
 
@@ -421,34 +426,51 @@ bool PhysicsScene::box2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 
 	if (box != nullptr && plane != nullptr)
 	{
-		glm::vec2 planeNorm = -plane->getNormal();
-		glm::vec2 vec1, vec2;
-		if (planeNorm.x >= 0)
+		//glm::vec2 planeNorm = -plane->getNormal();
+		//glm::vec2 vec1, vec2;
+		//if (planeNorm.x >= 0)
+		//{
+		//	vec2.x = box->getMaxPos().x;
+		//}
+		//else
+		//{
+		//	vec2.x = box->getMinPos().x;
+		//}
+		//
+		//if (planeNorm.y >= 0)
+		//{
+		//	vec2.y = box->getMaxPos().y;
+		//}
+		//else
+		//{
+		//	vec2.y = box->getMinPos().y;
+		//}
+		//
+		//float posSide = (planeNorm.x * vec2.x) + (planeNorm.y * vec2.y) + plane->getDistance();
+		//
+		//if (posSide > 0)
+		//{
+		std::vector<glm::vec2> verts =
 		{
-			vec2.x = box->getMaxPos().x;
-		}
-		else
-		{
-			vec2.x = box->getMinPos().x;
-		}
+			glm::vec2(box->getMinPos().x, box->getMaxPos().y), box->getMaxPos(),
+			glm::vec2(box->getMaxPos().x, box->getMinPos().y), box->getMinPos()
+		};
 		
-		if (planeNorm.y >= 0)
+		float minDist = INFINITY;
+		for (glm::vec2 vert : verts)
 		{
-			vec2.y = box->getMaxPos().y;
+			float distance = glm::dot(vert, plane->getNormal()) - plane->getDistance();
+			if (distance < minDist)
+			{
+				minDist = distance;
+			}
 		}
-		else
+
+		if(minDist <= 0)
 		{
-			vec2.y = box->getMinPos().y;
-		}
-		
-		float posSide = (planeNorm.x * vec2.x) + (planeNorm.y * vec2.y) + plane->getDistance();
+			box->setPosition(box->getPosition() - (plane->getNormal() * minDist));
 
-		if (posSide > 0)
-		{
-
-			box->setPosition(box->getPosition() + (planeNorm * -posSide));
-
-			plane->resolveCollision(box, planeNorm);
+			plane->resolveCollision(box, plane->getNormal());
 
 			return true;
 		}
@@ -591,16 +613,21 @@ bool PhysicsScene::sat2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 
 		for (glm::vec2 vert : verts)
 		{
-			float distance = glm::dot(vert, plane->getNormal() - plane->getDistance());
+			float distance = glm::dot(vert, plane->getNormal()) - plane->getDistance();
 			if (distance < minDist)
 			{
 				minDist = distance;
 			}
 		}
 
-		if (minDist > 0)
+		if (minDist <= 0)
 		{
 			std::cout << "sat2Plane Collision" << std::endl;
+
+			sat->setPosition(sat->getPosition() - plane->getNormal() * minDist);
+
+			plane->resolveCollision(sat, plane->getNormal());
+
 			return true;
 		}
 	}
@@ -628,7 +655,8 @@ bool PhysicsScene::sat2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 			glm::vec2 axis = axes[i];
 
 			glm::vec2 p1 = sat->project(axis);
-			float minSphere = glm::dot(sphere->getPosition() + (-axis * sphere->getRadius()), axis);
+
+			float minSphere = glm::dot(sphere->getPosition() + (-axis * sphere->getRadius()), axis); // get the "min and max" points of a circle on the axis
 			float maxSphere = glm::dot(sphere->getPosition() + (axis * sphere->getRadius()), axis);
 			glm::vec2 p2 = glm::vec2(minSphere, maxSphere);
 			
