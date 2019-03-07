@@ -1,0 +1,10 @@
+sceneSetups:
+- path: Assets/_Scenes/PlayerController.unity
+  isLoaded: 0
+  isActive: 0
+- path: Assets/_Scenes/Ragdoll.unity
+  isLoaded: 0
+  isActive: 0
+- path: Assets/_Scenes/Demonstration.unity
+  isLoaded: 1
+  isActive: 1
