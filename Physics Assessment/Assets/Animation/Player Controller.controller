@@ -34,7 +34,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Walking
-  m_Speed: 2
+  m_Speed: 3
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -46,7 +46,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 40c02ff2225ee574e8a401d5850d10b1, type: 3}
+  m_Motion: {fileID: 7400000, guid: 2a0b6228fd3958647a1513a659279a9e, type: 3}
   m_Tag: 
   m_SpeedParameter: Speed
   m_MirrorParameter: 

@@ -25,17 +25,17 @@ public class Player : MonoBehaviour {
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
 
-        if (!ragdoll.RagdollOn)
-        {
-            controller.SimpleMove(transform.up * Time.deltaTime);
-            transform.Rotate(transform.up, horizontal * speed * Time.deltaTime);
-            animator.SetFloat("Speed", vertical * speed * Time.deltaTime);
-        }
+       if (!ragdoll.RagdollOn)
+       {
+          controller.SimpleMove(transform.up * Time.deltaTime);
+          transform.Rotate(transform.up, horizontal * speed * Time.deltaTime);
+          animator.SetFloat("Speed", vertical * speed * Time.deltaTime);
+       }
 
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            ragdoll.RagdollOn = true;
-        }
+       if (Input.GetKeyDown(KeyCode.H))
+       {
+           ragdoll.RagdollOn = true;
+       }
 
 	}
 
